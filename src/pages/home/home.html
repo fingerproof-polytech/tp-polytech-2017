@@ -1,14 +1,26 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
+    <ion-title>Home</ion-title>
   </ion-navbar>
+  <ion-searchbar
+    [(ngModel)]="query"
+    (ionInput)="getResults()">
+  </ion-searchbar>
 </ion-header>
-
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+<ion-content>
+  <ion-list>
+    <ion-list-header>Results</ion-list-header>
+    <ion-item *ngIf="!results.length">No Results</ion-item>
+    <button
+      *ngFor="let result of results"
+      [navPush]="detailsPage"
+      [navParams]="result"
+      ion-item>
+      <ion-thumbnail item-start>
+        <img [src]="result.image">
+      </ion-thumbnail>
+      <h2>{{ result.title }}</h2>
+      <p>{{ result.author }} • {{ result.date }}</p>
+    </button>
+  </ion-list>
 </ion-content>
