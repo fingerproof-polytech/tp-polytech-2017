@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>Search</ion-title>
   </ion-navbar>
   <ion-searchbar
     [(ngModel)]="query"
@@ -13,8 +13,8 @@
     <ion-item *ngIf="!results.length">No Results</ion-item>
     <button
       *ngFor="let result of results"
+      [navParams]="{ result: result }"
       [navPush]="detailsPage"
-      [navParams]="result"
       ion-item>
       <ion-thumbnail item-start>
         <img [src]="result.image">

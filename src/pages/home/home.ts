@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { DetailsPage } from '../details/details';
 
-interface Result {
+export interface Result {
   author: string;
   date: number;
   image: string;
@@ -12,12 +12,12 @@ interface Result {
 const fakeResults: Result[] = [{
   author: 'Author 1',
   date: 2017,
-  image: 'http://lorempixel.com/300/300/',
+  image: 'http://lorempixel.com/300/300/people/1',
   title: 'Result 1'
 }, {
   author: 'Author 2',
   date: 2017,
-  image: 'http://lorempixel.com/300/300/',
+  image: 'http://lorempixel.com/300/300/people/2',
   title: 'Result 2'
 }];
 
