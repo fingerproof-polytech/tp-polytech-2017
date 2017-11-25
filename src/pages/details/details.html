@@ -4,7 +4,9 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  <h1>{{ details.title }}</h1>
-  <h2>{{ details.author }} • {{ details.date }}</h2>
-  <img [src]="details.image">
+  <h1>{{ movie.title }}</h1>
+  <h2>{{ movie.release_date | date }}</h2>
+  <img [src]="'https://image.tmdb.org/t/p/w780' + movie.backdrop_path">
+  <p>{{ movie.overview }}</p>
+  <img [src]="'https://image.tmdb.org/t/p/w780' + movie.poster_path">
 </ion-content>

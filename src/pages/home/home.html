@@ -4,23 +4,23 @@
   </ion-navbar>
   <ion-searchbar
     [(ngModel)]="query"
-    (ionInput)="getResults()">
+    (ionInput)="getMovies()">
   </ion-searchbar>
 </ion-header>
 <ion-content>
   <ion-list>
     <ion-list-header>Results</ion-list-header>
-    <ion-item *ngIf="!results.length">No Results</ion-item>
+    <ion-item *ngIf="!(movies | async)?.length">No Results</ion-item>
     <button
-      *ngFor="let result of results"
-      [navParams]="{ result: result }"
+      *ngFor="let movie of movies | async"
+      [navParams]="{ movie: movie }"
       [navPush]="detailsPage"
       ion-item>
       <ion-thumbnail item-start>
-        <img [src]="result.image">
+        <img [src]="'https://image.tmdb.org/t/p/w185' + movie.poster_path">
       </ion-thumbnail>
-      <h2>{{ result.title }}</h2>
-      <p>{{ result.author }} • {{ result.date }}</p>
+      <h2>{{ movie.title }}</h2>
+      <p>{{ movie.release_date | date }}</p>
     </button>
   </ion-list>
 </ion-content>
