@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+
+import { AlertController, NavController } from 'ionic-angular';
+import { Shake } from '@ionic-native/shake';
 
 import { apiKey } from '../../app/tmdb';
 import { DetailsPage } from '../details/details';
@@ -31,8 +35,25 @@ export class HomePage {
   movies: Observable<Movie[]>;
   query: string = '';
 
-  constructor(private httpClient: HttpClient) {
+  private shakeSub: Subscription;
+
+  constructor(
+    private alert: AlertController,
+    private nav: NavController,
+    private http: HttpClient,
+    private shake: Shake
+  ) {
     this.getMovies();
+  }
+
+  ionViewDidEnter(): void {
+    this.shakeSub = this.shake.startWatch()
+      .switchMap(() => this.discoverMovies())
+      .subscribe(movies => this.showRandomMovieAlert(movies));
+  }
+
+  ionViewWillLeave(): void {
+    this.shakeSub.unsubscribe();
   }
 
   getMovies(): void {
@@ -42,9 +63,33 @@ export class HomePage {
   }
 
   private fetchMovies(query: string): Observable<Movie[]> {
-    return this.httpClient.get<Movie[]>(
-      'https://api.themoviedb.org/3/search/movie',
-      { params: new HttpParams().set('api_key', apiKey).set('query', query) }
-    ).pluck('results');
+    const url: string = 'https://api.themoviedb.org/3/search/movie';
+    return this.http.get<Movie[]>(url, {
+      params: new HttpParams()
+        .set('api_key', apiKey)
+        .set('query', query)
+    }).pluck('results');
+  }
+
+  private discoverMovies(): Observable<Movie[]> {
+    const url: string = 'https://api.themoviedb.org/3/discover/movie';
+    return this.http.get<Movie[]>(url, {
+      params: new HttpParams()
+        .set('api_key', apiKey)
+        .set('primary_release_year', '2018')
+    }).pluck('results');
+  }
+
+  private showRandomMovieAlert(movies: Movie[]): void {
+    const movie: Movie = movies[Math.floor(Math.random() * movies.length)];
+    if (!movie) { return; }
+    this.alert.create({
+      title: movie.title,
+      message: movie.overview,
+      buttons: [{ text: 'Cancel' }, {
+        handler: () => { this.nav.push(this.detailsPage, { movie }) },
+        text: 'Details'
+      }]
+    }).present();
   }
 }
