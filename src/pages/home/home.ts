@@ -49,7 +49,7 @@ export class HomePage {
 
   ionViewDidEnter(): void {
     this.shakeSub = Observable.fromPromise(this.platform.ready())
-      .switchMap(() =>this.shake.startWatch())
+      .switchMap(() => this.shake.startWatch())
       .switchMap(() => this.discoverMovies())
       .subscribe(movies => this.showRandomMovieAlert(movies));
   }
