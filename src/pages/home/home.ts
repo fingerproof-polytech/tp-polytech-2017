@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
-import { AlertController, NavController } from 'ionic-angular';
+import { AlertController, NavController, Platform } from 'ionic-angular';
 import { Shake } from '@ionic-native/shake';
 
 import { apiKey } from '../../app/tmdb';
@@ -40,6 +40,7 @@ export class HomePage {
   constructor(
     private alert: AlertController,
     private nav: NavController,
+    private platform: Platform,
     private http: HttpClient,
     private shake: Shake
   ) {
@@ -47,7 +48,8 @@ export class HomePage {
   }
 
   ionViewDidEnter(): void {
-    this.shakeSub = this.shake.startWatch()
+    this.shakeSub = Observable.fromPromise(this.platform.ready())
+      .switchMap(() =>this.shake.startWatch())
       .switchMap(() => this.discoverMovies())
       .subscribe(movies => this.showRandomMovieAlert(movies));
   }
